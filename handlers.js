@@ -5,20 +5,32 @@ function sleep(ms) {
     while(new Date().getTime() < startTime + ms );
 }
 
-function start(res) {
+function start(res, postData) {
     console.log("Request handler 'start' was called.");
     
-    exec('find /', { timeout: 10000, maxBuffe: 20000*1024 }, function(error, stdout, stderr) {
-        res.writeHead(200, {"Content-Type": "text/plain"});
-        res.write(stdout);
-        res.end();
-    });
+    var body = '<!doctype html>'
++ '<html lang="en">'
++ '<head>'
++ '    <meta charset="UTF-8">'
++ '    <title>Node File Upload Sample Application</title>'
++ '</head>'
++ '<body>'
++ '    <form action="/upload" method="post">'
++ '        <textarea name="text" rows="20" cols="60"></textarea>'
++ '        <input type="submit" value="Submit"/>'
++ '    </form>'
++ '</body>'
++ '</html>';
+
+    res.writeHead(200, {"Content-Type": "text/html"});
+    res.write(body);
+    res.end();
 }
 
-function upload(res) {
+function upload(res, postData) {
     console.log("Request handler 'upload' was called.");
     res.writeHead(200, {"Content-Type": "text/plain"});
-    res.write('Hello Upload');
+    res.write("You've sent: " + postData);
     res.end();
 }
 
