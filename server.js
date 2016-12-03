@@ -1,42 +1,12 @@
 var http = require('http');
 var url = require('url');
-var formidable = require('formidable');
-var sys = require('sys');
 
 function start(route, handle) {
   var onReq = function(req, res) {
+    var pathname = url.parse(req.url).pathname;
+    console.log("Request for " + pathname + " received.");
     
-    if(req.url == '/upload' && req.method.toLowerCase() == 'post') {
-      var form = new formidable.IncomingForm();
-      form.parse(req, function(error, fields, files){
-        res.writeHead(200, {'content-type': 'text/plain'});
-        res.write('received upload:\n\n');
-        res.end(sys.inspect({fields: fields, files: files}));
-      });
-      return;
-    }
-    
-    var body = '<!doctype html>'
-+ '<html lang="en">'
-+ '<head>'
-+ '    <meta charset="UTF-8">'
-+ '    <title>Node File Upload Sample Application</title>'
-+ '</head>'
-+ '<body>'
-+ '    <form action="/upload" method="post" enctype="multipart/form-data">'
-+ '        <input type="text" name="title"><br>'
-+ '        <input type="file" name="upload" multiple="multiple"><br>'
-+ '        <input type="submit" value="Upload"/>'
-+ '    </form>'
-+ '</body>'
-+ '</html>';
-
-    res.writeHead(200, {"Content-Type": "text/html"});
-    //res.write();
-    res.end(body);
-    
-    
-    
+    route(handle, pathname, res, req);  
   };
   
   var server = http.createServer(onReq);
