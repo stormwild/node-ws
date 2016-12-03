@@ -1,3 +1,5 @@
+var exec = require('child_process').exec;
+
 function sleep(ms) {
     var startTime = new Date().getTime();
     while(new Date().getTime() < startTime + ms );
@@ -5,8 +7,13 @@ function sleep(ms) {
 
 function start() {
     console.log("Request handler 'start' was called.");
-    sleep(10000);
-    return 'Hello Start';
+    var content = 'empty';
+    
+    exec('ls -lah', function(error, stdout, stderr) {
+        content = stdout;
+    });
+    
+    return content;
 }
 
 function upload() {
